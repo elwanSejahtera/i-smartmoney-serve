@@ -1,13 +1,32 @@
-def analyze_smc(message):
+import os
+import requests
+
+ZAI_API_KEY = os.getenv("ZAI_API_KEY")
+
+def analyze_smc(text):
+    """
+    Mengirim teks ke API Chat.Z.Ai untuk analisa Smart Money Concepts
+    """
+    url = "https://api.z.ai/api/paas/v4/chat/completions"
+    headers = {
+        "Content-Type": "application/json",
+        "Accept-Language": "en-US,en",
+        "Authorization": f"Bearer {ZAI_API_KEY}"
+    }
+
+    payload = {
+        "model": "glm-4.6",
+        "messages": [
+            {"role": "system", "content": "You are an AI trained to analyze Smart Money Concepts and institutional flow in Forex markets."},
+            {"role": "user", "content": text}
+        ]
+    }
+
     try:
-        prices = [float(x) for x in message.replace(',', ' ').split()]
-        if len(prices) < 4:
-            return "Masukkan format: Open, High, Low, Close"
-        
-        o, h, l, c = prices[:4]
-        bias = "Bullish" if c > o else "Bearish"
-        strength = round(abs(c - o) / (h - l + 1e-6) * 100, 2)
-        
-        return f"📊 Smart Money Bias: {bias}\n🔥 Kekuatan: {strength}%"
-    except:
-        return "Format tidak dikenali. Gunakan: 1923.5,1930.2,1918.4,1925.7"
+        response = requests.post(url, headers=headers, json=payload)
+        data = response.json()
+        # Ambil hasil analisa dari respons
+        result = data["choices"][0]["message"]["content"]
+        return result
+    except Exception as e:
+        return f"❌ Gagal memproses analisa: {e}"
