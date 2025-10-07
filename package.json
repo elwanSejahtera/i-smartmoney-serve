@@ -2,11 +2,8 @@
   "name": "n8n-server",
   "version": "1.0.0",
   "description": "Self-hosted n8n server on Render",
-  "main": "server.js",
   "scripts": {
-    "start": "n8n start"
+    "start": "npx n8n start"
   },
-  "dependencies": {
-    "n8n": "^1.72.0"
-  }
+  "dependencies": {}
 }
