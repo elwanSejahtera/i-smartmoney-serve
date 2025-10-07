@@ -8,6 +8,7 @@ app = Flask(__name__)
 def home():
     return "✅ MrWan AI SMC Server is running!"
 
+# ✅ pastikan ini namanya "/"
 @app.route('/webhook', methods=['POST'])
 def webhook():
     data = request.get_json()
@@ -18,6 +19,7 @@ def webhook():
     if message:
         prediction = smc_detector.analyze_smc(message)
         return jsonify({"reply": prediction})
+    
     return jsonify({"status": "ok"})
 
 if __name__ == '__main__':
